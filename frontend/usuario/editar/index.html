@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div>
+        <form id="Edicion de informacion de la persona" novalidate>
+            <label for="nombre">Nuevo nombre:</label>
+            <input type="text" id="nombre" name="nombre">
+            <span class="error" id="nombreError"></span><br>
+
+            <label for="nombre2">Nuevo segundo nombre:</label>
+            <input type="text" id="nombre2" name="nombre2">
+            <span class="error" id="nombreError2"></span><br>
+
+            <label for="apellido">Nuevo Apellido:</label>
+            <input type="text" id="apellido" name="apellido">
+            <span class="error" id="apellido"></span><br>
+
+            <label for="password">Nueva contrasena:</label>
+            <input type="text" id="password" name="password">
+            <span class="error" id="passwordError"></span><br>
+
+            <label for="confirmPassword"> Confirmar nueva contrasena:</label>
+            <input type="text" id="confirmPassword" name="confirmPassword">
+            <span class="error" id="confirmarContrasena"></span><br>
+
+            <label for="email">Nuevo Correo Electronico:</label>
+            <input type="text" id="email" name="email">
+            <span class="error" id="emailError"></span><br>
+
+            <label for="cedula">Nueva cédula:</label>
+            <input type="text" id="cedula" name="cedula">
+            <span class="error" id="cedulaError"></span><br>
+
+            <label for="rut">Nuevo RUT:</label>
+            <input type="text" id="rut" name="rut">
+            <span class="error" id="rutError"></span><br>
+    </div>
+    <div class="botones-contenedor">
+        <button class="botonlindo" type="botom" id="ConfirmBtn">confirmar</button>
+        <button class="botonlindo" type="botom" id="cancelBtn">Cancelar</button>
+    </div>
+    <script type="module" src="./complemento.js"></script>
+
+</body>
+
+
+</html>

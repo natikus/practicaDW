@@ -1,0 +1,88 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Contenedor del formulario */
+form {
+    display: flex;
+    /* Usar flexbox */
+    flex-direction: column;
+    /* Disponer los elementos en columna */
+    align-items: center;
+    /* Centrar los elementos horizontalmente */
+    max-width: 400px;
+    /* Opcional: ancho máximo del formulario */
+    margin: 0 auto;
+    /* Centrar el formulario en la página */
+}
+
+/* Estilo para los inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    /* Ocupa todo el ancho del contenedor */
+    padding: 10px;
+    /* Espaciado interno */
+    margin: 5px 0;
+    /* Margen vertical entre inputs */
+    border: 1px solid #ccc;
+    /* Borde de los inputs */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra sutil */
+}
+
+/* Estilo para los labels */
+label {
+    align-self: flex-start;
+    /* Alinear los labels al inicio del contenedor */
+    margin: 5px 0;
+    /* Margen vertical entre labels */
+}
+
+
+input:focus {
+    border-color: #6a1b9a;
+    outline: none;
+}
+
+.botones-contenedor {
+    display: flex;
+    flex-direction: column;
+    /* Los botones uno debajo del otro */
+    /*justify-content: center;
+    /* Centrarlos verticalmente */
+    align-items: center;
+    /* Centrarlos horizontalmente */
+    height: 100vh;
+    /* Ocupar toda la altura de la página */
+}
+
+.botonlindo {
+    background-color: #6a1b9a;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    width: 100%;
+    /* Ancho completo */
+    max-width: 300px;
+    /* Limitar el ancho máximo */
+    margin: 10px 0;
+    /* Espacio entre los botones */
+    text-align: center;
+    /* Centrar el texto en el botón */
+}
+
+
+.botonlindo:hover {
+    background-color: #4a0072;
+}
