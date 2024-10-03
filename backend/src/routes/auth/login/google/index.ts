@@ -9,6 +9,7 @@ const googleRoutes: FastifyPluginAsync = async (
 
     fastify.get('/callback', {
         schema: {
+            tags: ["persona"],
             summary: "Google OAuth2 Callback",
             description: "Ruta para manejar el callback de autenticación de Google OAuth2.",
             params: {

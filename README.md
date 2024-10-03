@@ -1,1 +1,2 @@
 Hola, tiene que crear una carpeta en backend a la altura de src que se llame uploads
+despues arrastre las imagenes que estan en la raiz del repo por que son las que estan cargadas para las personas que ya estan cargadas en la base de datos

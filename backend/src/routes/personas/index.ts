@@ -43,6 +43,7 @@ const personaRoute: FastifyPluginAsync = async (
   // Ruta para crear una nueva persona
   fastify.post("/", {
     schema: {
+      tags: ["persona"],
       consumes: ["multipart/form-data"],
       body: PersonaPostSchema,
     },
@@ -115,7 +116,7 @@ const personaRoute: FastifyPluginAsync = async (
         }
       }
     },
-    onRequest: fastify.authenticate,
+    onRequest: fastify.verifySelf,
     handler: async function (request, reply) {
       const { id } = request.params as { id: string };
       const res = await query(`DELETE FROM personas WHERE id = ${id};`);
@@ -163,7 +164,7 @@ const personaRoute: FastifyPluginAsync = async (
         }
       }
     },
-    onRequest: fastify.authenticate,
+    onRequest: fastify.verifySelf,
     handler: async function (request, reply) {
       const { id } = request.params as { id: string };
       const personaPut = request.body as PersonaPutType;
