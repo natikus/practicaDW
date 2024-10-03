@@ -17,75 +17,53 @@ body {
 .name-lastname h4 {
     margin: 5px 0;
     color: #6a1b9a;
+
 }
 
 .card {
     background-color: #f8f8f8;
-    /* Color de fondo */
     border: 1px solid #ccc;
-    /* Borde */
     border-radius: 8px;
-    /* Bordes redondeados */
     padding: 20px;
-    /* Espaciado interno */
     margin: 15px;
-    /* Espaciado externo */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra */
     width: 300px;
-    /* Ancho fijo */
     height: 250px;
-    /* Altura fija */
     display: flex;
-    /* Usar flexbox para el contenido */
     flex-direction: column;
-    /* Colocar contenido en columna */
     justify-content: space-between;
-    /* Espaciar contenido dentro de la tarjeta */
 }
 
 .card h2 {
     margin: 0;
-    /* Eliminar margen */
     font-size: 1.5em;
-    /* Tamaño de fuente del título */
+
+
 }
 
 .card p {
     margin: 5px 0;
-    /* Margen entre párrafos */
 }
 
-/* Botón dentro de la tarjeta */
+
 .btnSee {
     background-color: #6a1b9a;
-    /* Color de fondo */
     color: white;
-    /* Color del texto */
     border: none;
-    /* Sin borde */
     border-radius: 5px;
-    /* Bordes redondeados */
     padding: 10px;
-    /* Espaciado interno */
     cursor: pointer;
-    /* Cursor de mano */
     transition: background-color 0.3s;
-    /* Transición suave */
     align-self: center;
-    /* Centrar el botón horizontalmente */
     margin-top: auto;
-    /* Empujar el botón hacia abajo */
     display: flex;
-    /* Flexbox para el icono */
     align-items: center;
-    /* Centrar icono y texto */
 }
 
-/* Efecto hover para el botón */
 .btnSee:hover {
     background-color: #4e1b6f;
-    /* Color más oscuro en hover */
+
+
 }
 
 .botonlindo {
@@ -104,4 +82,6 @@ body {
 
 .botonlindo:hover {
     background-color: #4a0072;
+
+
 }

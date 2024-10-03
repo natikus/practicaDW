@@ -29,9 +29,7 @@ h1 {
 .button-container {
     display: flex;
     flex-direction: column;
-    /* Cambiado a columna para permitir más espacio */
     gap: 20px;
-    /* Espacio entre los botones */
 }
 
 .btn {
@@ -40,10 +38,11 @@ h1 {
     font-size: 18px;
     border-radius: 5px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #6a1b9a;
     transition: background-color 0.3s ease;
+
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: #6a1b9a;
 }

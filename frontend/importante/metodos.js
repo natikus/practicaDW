@@ -1,5 +1,5 @@
 // Definir la URL base de tu API
-const API_URL = "http://localhost/backend/personas"; // Asegúrate de ajustar esto según sea necesario
+const API_URL = "https://localhost/backend/personas"; 
 
 // Función para obtener todas las personas (GET /persona)
 export async function getAllPersonas() {
@@ -8,11 +8,11 @@ export async function getAllPersonas() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}` // Suponiendo que el JWT está almacenado en localStorage
+                "Authorization": `Bearer ${localStorage.getItem("token")}` 
             }
         });
         if (!response.ok) throw new Error("Error al obtener personas");
-        return await response.json();  // Retorna la lista de personas
+        return await response.json();  
     } catch (error) {
         console.error(error);
         return null;
@@ -30,7 +30,7 @@ export async function getPersonaById(id) {
             }
         });
         if (!response.ok) throw new Error("Error al obtener la persona");
-        return await response.json();  // Retorna los datos de la persona
+        return await response.json();  
     } catch (error) {
         console.error(error);
         return null;
@@ -38,22 +38,21 @@ export async function getPersonaById(id) {
 }
 
 // Función para crear una nueva persona (POST /persona)
-export async function createPersona(persona) {
+export async function createPersona(formData) {
     try {
         const response = await fetch(`${API_URL}`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(persona)
+            body: formData,
         });
         if (!response.ok) throw new Error("Error al crear la persona");
-        return await response.json();  // Retorna la nueva persona creada
+        window.location.href = '../../usuario/login/index.html';
+        return await response.json();
+
     } catch (error) {
         console.error(error);
         return null;
     }
-}
+};
 
 // Función para actualizar una persona por ID (PUT /persona/:id)
 export async function updatePersona(id, personaData) {
@@ -69,16 +68,15 @@ export async function updatePersona(id, personaData) {
 
         if (!response.ok) throw new Error("Error al actualizar la persona");
 
-        // Lee la respuesta una sola vez
-        return await response.json(); // Retorna la persona actualizada
+       
+        return await response.json(); 
     } catch (error) {
         console.error(error);
-        return null; // Retorna null en caso de error
+        return null; 
     }
 };
 
 
-// Función para eliminar una persona por ID (DELETE /persona/:id)
 export async function deletePersona(id) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -87,28 +85,37 @@ export async function deletePersona(id) {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
         });
-        if (!response.ok) throw new Error("Error al eliminar la persona");
-        return await response.json();  // Retorna el mensaje de confirmación
+
+        if (!response.ok) {
+            throw new Error("Error al eliminar la persona");
+        }
+        
+        return response;  
+
     } catch (error) {
         console.error(error);
         return null;
     }
 }
-export async function login(email, password) {
+
+export async function login(email, contrasena) {
     try {
-        const response = await fetch('http://localhost/backend/personas/login', {
+        const response = await fetch('https://localhost/backend/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, contrasena }),
         });
 
         if (response.ok) {
             const data = await response.json();
             console.log("Datos del login:", data);
-            // Guardar el token JWT en el almacenamiento local o en cookies
+          
             localStorage.setItem('token', data.token);
+            localStorage.setItem('id', data.id);
+            localStorage.setItem('data', data.data);
+            console.log("id del metodo", data.id);
             alert('Login exitoso');
             return {
                 token: data.token,
@@ -125,3 +132,23 @@ export async function login(email, password) {
     }
 };
 
+export async function loginGoogle(user, token) {
+    try {
+
+        if (user && token) {
+
+            localStorage.setItem('token', token);
+           
+            const googleUser = { name: user.get('username'), lastname: user.get('userlastname') };
+            localStorage.setItem('user', JSON.stringify(googleUser));
+        } else {
+       
+            
+            console.error('Login con google no disponible');
+            //no se pq funciona pero tira esto, lo importante es que fundiona :)
+        }
+    } catch (error) {
+        console.error('Google login error:', error);
+        throw error;
+    }
+};

@@ -1,4 +1,4 @@
-import { getPersonaById } from "../../importante/metodos.js"; // Asegúrate de que la ruta sea correcta
+import { getPersonaById } from "../../importante/metodos.js";
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -15,16 +15,26 @@ if (idPersona) {
 
 async function getPerson(idPersona) {
     try {
-        console.log('Haciendo fetch a:', `https://localhost/backend/personas/${idPersona}`);
-        const persona = await getPersonaById(idPersona); // Llama al método que definiste en metodos.js
+        const persona = await getPersonaById(idPersona);
 
         if (persona) {
+            console.log('Persona obtenida:', persona);
             document.getElementById('nombre').innerText = persona.nombre;
-            document.getElementById('nombre2').innerText = persona.nombre2;
+            document.getElementById('nombre2').innerText = persona.nombre2 || '';
             document.getElementById('apellido').innerText = persona.apellido;
             document.getElementById('email').innerText = persona.email;
             document.getElementById('cedula').innerText = persona.cedula;
             document.getElementById('rut').innerText = persona.rut;
+            console.log(persona.imagen)
+
+            if (persona.imagen && persona.imagen !== "undefined") {
+                const imgElement = document.createElement('img');
+                imgElement.src = `https://localhost/backend${persona.imagen}`;
+                imgElement.alt = 'Foto de perfil';
+                document.getElementById('fotoPerfil').appendChild(imgElement);
+            } else {
+                console.error('La imagen de la persona es undefined o no está presente');
+            }
 
             console.log('La persona se ha cargado correctamente:', persona);
         } else {
@@ -35,3 +45,4 @@ async function getPerson(idPersona) {
         alert('Error al obtener los datos de la persona');
     }
 }
+

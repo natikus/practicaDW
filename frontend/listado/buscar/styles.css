@@ -1,5 +1,5 @@
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family:'Poppins' , sans-serif;
   margin: 0;
   padding: 20px;
   background-color: #f9f9f9;
@@ -18,13 +18,13 @@ body {
 }
 
 .btnsearch {
-  background-color: #6a1b9a;
+  background-color:#6a1b9a;
   color: white;
   border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius:5px;
+  padding:10px 15px;
+  cursor:pointer ;
+  transition:background-color 0.3s;
 }
 
 .btnsearch:hover {
@@ -32,83 +32,59 @@ body {
 }
 
 .input-search {
-  padding: 10px;
-  margin-left: 10px;
+  padding: 10px ;
+  margin-left:10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 250px;
+  border-radius:5px;
+  width: 250px ;
 }
 
 .card {
   background-color: #f8f8f8;
-  /* Color de fondo */
-  border: 1px solid #ccc;
-  /* Borde */
-  border-radius: 8px;
-  /* Bordes redondeados */
-  padding: 20px;
-  /* Espaciado interno */
+  border:1px solid #ccc;
+  border-radius : 8px;
+  padding: 20px ;
   margin: 15px;
-  /* Espaciado externo */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  /* Sombra */
-  width: 300px;
-  /* Ancho fijo */
-  height: 250px;
-  /* Altura fija */
-  display: flex;
-  /* Usar flexbox para el contenido */
-  flex-direction: column;
-  /* Colocar contenido en columna */
+  box-shadow:0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 300px ;
+  height:250px;
+  display:flex;
+  flex-direction:column;
   justify-content: space-between;
-  /* Espaciar contenido dentro de la tarjeta */
 }
 
 .card h2 {
-  margin: 0;
-  /* Eliminar margen */
-  font-size: 1.5em;
-  /* Tamaño de fuente del título */
+  margin:0;
+  font-size: 1.5em ;
+
 }
 
 .card p {
-  margin: 5px 0;
-  /* Margen entre párrafos */
+  margin : 5px 0;
+
 }
 
-/* Botón dentro de la tarjeta */
+
 .btnSee {
-  background-color: #6a1b9a;
-  /* Color de fondo del botón */
+  background-color:#6a1b9a;
   color: white;
-  /* Color del texto del botón */
-  padding: 10px 15px;
-  /* Espaciado interno */
-  border: none;
-  /* Sin borde */
-  border-radius: 5px;
-  /* Bordes redondeados */
+  padding:10px 15px;
+  border:none;
+  border-radius: 5px ;
   cursor: pointer;
-  /* Cambiar el cursor al pasar sobre el botón */
-  transition: background-color 0.3s, transform 0.2s;
-  /* Transiciones para el efecto hover */
+  transition :background-color 0.3s, transform 0.2s ;
   text-align: center;
-  /* Centrar el texto */
-  display: block;
-  /* Asegurar que el botón sea un bloque */
-  margin: 10px auto;
-  /* Espacio arriba y centrado horizontalmente */
-  text-decoration: none;
-  /* Sin subrayado para enlaces */
-  width: 100%;
-  /* Opcional: ocupa todo el ancho de la card */
+  display : block;
+  margin:10px auto;
+  text-decoration:none;
+  width: 100% ;
   max-width: 200px;
-  /* Opcional: ancho máximo del botón */
+
 }
 
 .botSee:hover {
-  background-color: #4a0072;
-  /* Color de fondo al pasar el mouse */
-  transform: scale(1.05);
-  /* Efecto de aumento al pasar el mouse */
+  background-color:#4a0072;
+  transform: scale(1.05) ;
+
+
 }

@@ -9,11 +9,10 @@ async function getPerson(idPersona) {
 
     personas.forEach(persona => {
         if ((persona.id).toString() === idPersona) {
-            // Crear el contenedor de la tarjeta
+
             const card = document.createElement('div');
             card.classList.add('card');
 
-            // Contenido de la tarjeta
             card.innerHTML = `
             <h2>${persona.nombre} ${persona.apellido}</h2>
             <p><strong>Cédula:</strong> ${persona.cedula}</p>
@@ -30,7 +29,6 @@ async function getPerson(idPersona) {
         }
     });
 
-    // Añadir el evento a los botones después de que se han creado
     const buttons = document.querySelectorAll('.btnSee');
     buttons.forEach(button => {
         button.addEventListener('click', function () {
@@ -47,6 +45,6 @@ async function seePerson(id) {
 document.querySelectorAll('.btnsearch').forEach(button => {
     button.addEventListener('click', function () {
         const id = document.getElementById('searchPerson').value;
-        getPerson(id);  // Llamada a la función async
+        getPerson(id);
     });
 });

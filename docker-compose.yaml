@@ -13,11 +13,16 @@ services:
       - PGUSER=${PGUSER}
       - PGPASSWORD=${PGPASSWORD}
       - PGHOST=${PGHOST}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
   frontend:
     image: nginx:alpine
     container_name: frontend
     volumes:
       - ./frontend/:/usr/share/nginx/html
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
   database:
     image: database
     container_name: database
@@ -27,14 +32,26 @@ services:
       - POSTGRES_DB=${PGDATABASE}
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     ports:
-      - 5431:5432
+      - 5432:5432
   proxy:
     image: proxy
     container_name: proxy
     build: ./proxy
     ports:
       - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./proxy/certs:/etc/nginx/certs
+    environment:
+      - FRONTEND_URL=${FRONTEND_URL}
+      - BACKEND_URL=${BACKEND_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
     depends_on:
-      - frontend
       - backend
+      - frontend

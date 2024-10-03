@@ -9,18 +9,19 @@
 </head>
 
 <body>
-    <form id="Inicio de sesion">
+    <form id="loginForm">
         <h3>Inicio de Sesion</h3>
 
-        <label for="mail">Correo Electronico</label>
-        <input type="text" placeholder="Ingresa correo" id="mail">
+        <label for="email">Correo Electronico</label>
+        <input type="text" placeholder="Ingresa correo" id="email">
 
-        <label for="password">Contraseña</label>
-        <input type="password" placeholder="Ingresa contraseña" id="password">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" placeholder="Ingresa contraseña" id="contrasena">
 
-        <button id="btnLogin">Ingresar</button>
+        <button type="submit" id="btnLogin">Ingresar</button>
         <span class="error" id="error"></span>
         <div class="social">
+            <a href="https://localhost/backend/auth/login/google" id="btnGoogle" class="go"> Google</a>
             <a href="../registro/index.html" class="go"> Crear Usuario</a>
         </div>
     </form>

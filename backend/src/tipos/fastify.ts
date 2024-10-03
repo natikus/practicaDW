@@ -8,11 +8,12 @@ declare module 'fastify' {
     interface FastifyInstance {
         authenticate: AuthenticateFunction;
         verifyUserId: AuthenticateFunction;
+        googleOAuth2: any;
     }
 
     interface FastifyJWT {
-        payload: { id: string; email: string };  // Aquí especificamos que el payload incluye 'id' y 'email'
-        user: { id: string; email: string };  // Aquí especificamos que request.user tendrá 'id' y 'email'
+        payload: { id: string; email: string };
+        user: { id: string; email: string };
     }
 }
 

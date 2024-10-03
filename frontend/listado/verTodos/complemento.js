@@ -1,7 +1,11 @@
-import { getAllPersonas } from "./../../importante/metodos.js";
+import { deletePersona, getAllPersonas } from "./../../importante/metodos.js";
+import { loginGoogle } from "./../../importante/metodos.js";
 
+const userId = localStorage.getItem('id');
+console.log(userId);
 document.addEventListener("DOMContentLoaded", async function () {
     const cardContainer = document.getElementById("card-container");
+    console.log(localStorage);
 
     const personas = await getAllPersonas();
     if (!personas) return;
@@ -24,41 +28,88 @@ document.addEventListener("DOMContentLoaded", async function () {
         cardContainer.appendChild(card);
     });
 
-    const buttons = document.querySelectorAll('.btnSee');
-    buttons.forEach(button => {
+    const button = document.querySelectorAll('.btnSee');
+    button.forEach(button => {
         button.addEventListener('click', function () {
             const id = this.getAttribute('data-id');
             seePerson(id);
         });
     });
+
 });
 
 async function seePerson(id) {
-    window.location.href = `./../ver/index.html?id=${id}`;
+    window.location.href = `./../../usuario/ver/index.html?id=${id}`;
+}
+document.getElementById('btnEliminarme').addEventListener('click', () => {
+    eliminarme(userId);
+});
+async function eliminarme(id) {
+    console.log("eliminando persona");
+    const eliminar = await deletePersona(id);
+
+    if (eliminar && eliminar.ok) {
+        console.log("Has borrado tu perfil, hasta la próxima");
+    } else {
+        console.error("Error al eliminar el perfil");
+    }
+    localStorage.clear();
+    window.location.href = `./../../usuario/login/index.html`;
 }
 
-// Obteniendo la ID de usuario de localStorage
-const userId = localStorage.getItem('id');
+
+
 
 document.getElementById('btnEditarme').addEventListener('click', () => {
-    console.log("boton apretado");
+    console.log("boton editarme apretado");
 
     if (!userId) {
         console.error("No se encontró userId en localStorage.");
-        return; // Detiene la ejecución si no hay userId
-    }
+        return;
+    };
 
-    // Redirigir a la página de edición
+
     window.location.href = `./../../usuario/editar/index.html?id=${userId}`;
 });
-// Suponiendo que tienes un botón de logout con el id 'logout-button'
+
+
 document.getElementById('btnSalir').addEventListener('click', () => {
-    // Eliminar el token de localStorage
+
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     localStorage.removeItem('userInfo');
 
-    // Redirigir al usuario a la página de inicio o login
-    window.location.href = './../..'; // Cambia esto según tu ruta de login
+
+    window.location.href = './../..';
 });
 
+async function GoogleLogin() {
+    if (!localStorage.getItem('token')) {
+        console.log("Verificando si hay datos de Google en la URL...");
+        try {
+            const { user, token } = await getGoogleInfo();
+            if (user && token) {
+                console.log("Datos de Google obtenidos:", { user, token });
+                await loginGoogle({ user, token });
+                window.alert('Login exitoso');
+                document.dispatchEvent(new Event('authChanged'));
+            } else {
+                console.error('No se encontraron parámetros "user" o "token" en la URL');
+            }
+        } catch (error) {
+            console.error('Login fallido:', error);
+            window.alert('Login fallido: ' + error.message);
+        }
+    }
+};
+
+async function getGoogleInfo() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const user = urlParams.get('user');
+    const token = urlParams.get('token');
+    console.log('Parámetros obtenidos:', { user, token });
+    return { user, token };
+}
+window.addEventListener('load', () => {
+    GoogleLogin();
+});

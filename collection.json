@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "78ee799b-f0c2-4999-b74a-5f6ad051188b",
+		"name": "PROYECTO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31646778",
+		"_collection_link": "https://red-space-926741.postman.co/workspace/My-Workspace~d7dc0f96-e34b-4805-88cd-603da3a13369/collection/31646778-78ee799b-f0c2-4999-b74a-5f6ad051188b?action=share&source=collection_link&creator=31646778"
+	},
+	"item": [
+		{
+			"name": "GetAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{       \"id\": 3,\r\n        \"contrasena\": \"1234Qwer#\",\r\n        \"repetirContrasena\": \"1234Qwer#\",\r\n        \"cedula\": \"5.479.508-3\",\r\n        \"nombre\": \"Maríaa\",\r\n        \"apellido\": \"González\",\r\n        \"email\": \"maria.peerez@example.com\",\r\n        \"rut\": \"160237810018\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/personas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"personas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOne",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/personas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"personas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "registro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{       \"id\": 3,\r\n        \"contrasena\": \"1234Qwer#\",\r\n        \"repetirContrasena\": \"1234Qwer#\",\r\n        \"cedula\": \"5.479.508-3\",\r\n        \"nombre\": \"Maríaa\",\r\n        \"apellido\": \"González\",\r\n        \"email\": \"maria.peerez@example.com\",\r\n        \"rut\": \"160237810018\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/personas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"personas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{       \"id\": 3,\r\n        \"contrasena\": \"1234Qwer#\",\r\n        \"repetirContrasena\": \"1234Qwer#\",\r\n        \"cedula\": \"5.479.508-3\",\r\n        \"nombre\": \"Maríaa\",\r\n        \"apellido\": \"Gonzáles\",\r\n        \"email\": \"maria.peerez@example.com\",\r\n        \"rut\": \"160237810018\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/personas/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"personas",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Pepitoo\",\r\n    \"apellido\": \"Rodriguez\",\r\n    \"email\": \"roberto@hotmail.com\",\r\n    \"cedula\": \"5.440.395-7\",\r\n    \"rut\": \"214849650014\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/personas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"personas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Pepitoo\",\r\n    \"apellido\": \"Rodriguez\",\r\n    \"email\": \"robertooo@hotmail.com\",\r\n    \"cedula\": \"3.306.549-7\",\r\n    \"rut\": \"120305990013\",\r\n    \"contrasena\": \"1234qweR$\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/backend/personas/login ",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"backend",
+						"personas",
+						"login "
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -5,50 +5,38 @@ body {
     background-color: #f9f9f9;
 }
 
-/* Contenedor del formulario */
 form {
     display: flex;
-    /* Usar flexbox */
+
     flex-direction: column;
-    /* Disponer los elementos en columna */
     align-items: center;
-    /* Centrar los elementos horizontalmente */
     max-width: 400px;
-    /* Opcional: ancho máximo del formulario */
     margin: 0 auto;
-    /* Centrar el formulario en la página */
 }
 
-/* Estilo para los inputs */
 input[type="text"],
 input[type="password"],
 input[type="email"] {
     width: 100%;
-    /* Ocupa todo el ancho del contenedor */
     padding: 10px;
-    /* Espaciado interno */
     margin: 5px 0;
-    /* Margen vertical entre inputs */
     border: 1px solid #ccc;
-    /* Borde de los inputs */
     border-radius: 5px;
-    /* Bordes redondeados */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra sutil */
 }
 
-/* Estilo para los labels */
+
 label {
     align-self: flex-start;
-    /* Alinear los labels al inicio del contenedor */
     margin: 5px 0;
-    /* Margen vertical entre labels */
+
 }
 
 
 input:focus {
     border-color: #6a1b9a;
     outline: none;
+
 }
 
 button {
@@ -65,4 +53,6 @@ button {
 
 button:hover {
     background-color: #4a0072;
+
+
 }

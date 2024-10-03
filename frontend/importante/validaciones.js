@@ -2,67 +2,64 @@ export function validacionesFormulario() {
     const nombre = document.getElementById('nombre');
     const nombre2 = document.getElementById('nombre2');
     const apellido = document.getElementById('apellido');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirmPassword');
+    const contrasena = document.getElementById('contrasena');
+    const confirmContrasena = document.getElementById('confirmContrasena');
     const email = document.getElementById('email');
     const cedula = document.getElementById('cedula');
     const rut = document.getElementById('rut');
-    const imagen = document.getElementById('miImagen');
+    const imagen = document.getElementById('imagen');
 
     const nombreError = document.getElementById('nombreError');
     const nombre2Error = document.getElementById('nombre2Error');
     const apellidoError = document.getElementById('apellidoError');
-    const passwordError = document.getElementById('passwordError');
-    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const contrasenaError = document.getElementById('contrasenaError');
+    const confirmContrasenaError = document.getElementById('confirmContrasenaError');
     const emailError = document.getElementById('emailError');
     const cedulaError = document.getElementById('cedulaError');
     const rutError = document.getElementById('rutError');
     const imagenError = document.getElementById('imagenError');
 
-    // Resetear errores antes de la validación
     const errorElements = document.querySelectorAll('.error');
-    errorElements.forEach(el => el.style.display = 'none'); // Esconder todos los mensajes de error
+    errorElements.forEach(el => el.style.display = 'none');
 
     let isValid = true;
 
-    // Validaciones campo por campo
 
-    // Validación de nombre
+
+
     if (nombre.value.trim() === '' || nombre.value.length < 2 || nombre.value.length > 50) {
         nombreError.textContent = 'El nombre es obligatorio y debe tener entre 2 y 50 caracteres.';
         nombreError.style.display = 'block';
         isValid = false;
     }
 
-    // Validación de nombre2 (opcional, pero si se ingresa, debe tener entre 2 y 50 caracteres)
     if (nombre2.value.trim() !== '' && (nombre2.value.length < 2 || nombre2.value.length > 50)) {
         nombre2Error.textContent = 'El segundo nombre debe tener entre 2 y 50 caracteres si se ingresa.';
         nombre2Error.style.display = 'block';
         isValid = false;
     }
 
-    // Validación de apellido
+
     if (apellido.value.trim() === '' || apellido.value.length < 2 || apellido.value.length > 50) {
         apellidoError.textContent = 'El apellido es obligatorio y debe tener entre 2 y 50 caracteres.';
         apellidoError.style.display = 'block';
         isValid = false;
     }
 
-    // Validación de password
-    if (password.value.trim() === '' || password.value.length < 6 || !/[A-Z]/.test(password.value) || !/[a-z]/.test(password.value) || !/[0-9]/.test(password.value) || !/[!@#$%^&*_-]/.test(password.value)) {
-        passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.';
-        passwordError.style.display = 'block';
+
+    if (contrasena.value.trim() === '' || contrasena.value.length < 6 || !/[A-Z]/.test(contrasena.value) || !/[a-z]/.test(contrasena.value) || !/[0-9]/.test(contrasena.value) || !/[!@#$%^&*_-]/.test(contrasena.value)) {
+        contrasenaError.textContent = 'La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.';
+        contrasenaError.style.display = 'block';
         isValid = false;
     }
 
-    // Validación de confirmPassword
-    if (confirmPassword.value !== password.value) {
-        confirmPasswordError.textContent = 'Las contraseñas no coinciden.';
-        confirmPasswordError.style.display = 'block';
+    if (confirmContrasena.value !== contrasena.value) {
+        confirmContrasenaError.textContent = 'Las contraseñas no coinciden.';
+        confirmContrasenaError.style.display = 'block';
         isValid = false;
     }
 
-    // Validación de email
+
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (email.value.trim() === '' || !emailPattern.test(email.value)) {
         emailError.textContent = 'El correo electrónico es obligatorio y debe ser válido.';
@@ -70,7 +67,7 @@ export function validacionesFormulario() {
         isValid = false;
     }
 
-    // Validación de cedula
+
     const cedulaPattern = /^\d{1}\.\d{3}\.\d{3}-\d{1}$/;
     if (cedula.value.trim() === '' || !cedulaPattern.test(cedula.value) || !validarCedulaUruguaya(cedula.value)) {
         cedulaError.textContent = 'La cédula es obligatoria, debe seguir el formato y ser válida.';
@@ -78,15 +75,19 @@ export function validacionesFormulario() {
         isValid = false;
     }
 
-    // Validación de RUT
+
     if (rut.value.trim() === '' || !validarRutUruguayo(rut.value)) {
         rutError.textContent = 'El RUT es obligatorio y debe ser válido.';
         rutError.style.display = 'block';
         isValid = false;
     }
 
+
     return isValid;
 }
+
+
+
 
 function validarCedulaUruguaya(cedula) {
 

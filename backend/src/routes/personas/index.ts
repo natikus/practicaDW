@@ -1,275 +1,264 @@
-import { PersonaPutSchema, PersonaPutType, PersonaPostType, PersonaPostSchema, PersonaIdSchema } from "../../tipos/persona.js"
-import { FastifyPluginAsync, FastifyPluginOptions } from "fastify";
-import { FastifyInstance } from "fastify/types/instance.js";
-import { query } from "../../services/database.js";
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
 import bcrypt from 'bcrypt';
-// Definición del plugin de ruta
+import { query } from "./../../services/database.js";
+import { PersonaIdSchema, PersonaPostSchema, PersonaPutSchema, PersonaSchema, PersonaPutType, PersonaPostType } from '../../tipos/persona.js';
+import path from 'path';
+import { writeFileSync } from 'fs';
+
 const personaRoute: FastifyPluginAsync = async (
-    fastify: FastifyInstance,
-    opts: FastifyPluginOptions
+  fastify: FastifyInstance,
+  opts: FastifyPluginOptions
 ): Promise<void> => {
-    // Ruta para obtener todas las personas
-    fastify.get("/", {
-        schema: {
-            tags: ["persona"],
+
+  // Ruta para obtener todas las personas
+  fastify.get("/", {
+    schema: {
+      summary: "Obtener todas las personas",
+      description: "Devuelve la lista completa de personas registradas en la base de datos.",
+      tags: ["persona"],
+      response: {
+        200: {
+          type: "array",
+
         },
+        404: {
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
+        }
+      }
+    },
+    onRequest: fastify.authenticate,
+    handler: async function (request, reply) {
+      const res = await query(`SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas`);
+      if (res.rows.length === 0) {
+        reply.code(404).send({ message: "No hay personas registradas" });
+        return;
+      }
+      return res.rows;
+    }
+  });
 
-        onRequest: fastify.authenticate,
+  // Ruta para crear una nueva persona
+  fastify.post("/", {
+    schema: {
+      consumes: ["multipart/form-data"],
+      body: PersonaPostSchema,
+    },
 
-        handler: async function (request, reply) {
-            const res = await query(`SELECT
+    handler: async function (request, reply) {
+      const personaPost = request.body as PersonaPostType;
+
+      let imageUrl = '';
+      if (personaPost.imagen) {
+        const fileBuffer = personaPost.imagen._buf as Buffer;
+        const filepath = path.join(process.cwd(), "uploads", personaPost.imagen.filename);
+        writeFileSync(filepath, fileBuffer);
+        imageUrl = `/uploads/${personaPost.imagen.filename}`;
+      }
+      const nombre = personaPost.nombre.value;
+      const apellido = personaPost.apellido.value;
+      const email = personaPost.email.value;
+      const cedula = personaPost.cedula.value;
+      const rut = personaPost.rut.value;
+      const hashedPassword = await bcrypt.hash(personaPost.contrasena.value, 10);
+
+      const res = await query(
+        `INSERT INTO personas
+       (nombre, apellido, email, cedula, rut, contrasena, imagen)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id;`,
+        [nombre, apellido, email, cedula, rut, hashedPassword, imageUrl]
+      );
+
+      if (res.rowCount === 0) {
+        reply.code(404).send({ message: "Failed to insert persona" });
+        return;
+      }
+
+      const id = res.rows[0].id;
+      reply.code(201).send({
         id,
         nombre,
-        nombre2,
         apellido,
         email,
         cedula,
-        rut
-        FROM personas`);//no lleva , despues del ultimo parametro
-            if (res.rows.length === 0) {
-                reply.code(404).send({ message: "No hay personas registradas" });
-                return;
-            }
-            return res.rows;
+        rut,
+        imageUrl
+      });
+    }
+  });
+
+
+
+  // Ruta para eliminar una persona
+  fastify.delete("/:id", {
+    schema: {
+      summary: "Eliminar una persona",
+      description: "Elimina una persona de la base de datos por su ID.",
+      params: PersonaIdSchema,
+      tags: ["persona"],
+      response: {
+        200: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+            id: { type: "number" }
+          }
+        },
+        404: {
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
         }
-    });
+      }
+    },
+    onRequest: fastify.authenticate,
+    handler: async function (request, reply) {
+      const { id } = request.params as { id: string };
+      const res = await query(`DELETE FROM personas WHERE id = ${id};`);
+      if (res.rowCount === 0) {
+        reply.code(404).send({ message: "Persona no encontrada" });
+        return;
+      }
+      reply.code(200).send({ message: "Persona eliminada", id });
+    }
+  });
 
 
-    fastify.post("/", {
-        schema: {
-            body: PersonaPostSchema,  // `params` no es correcto aquí; debería ser `body`
-            tags: ["persona"],
-            description: "Crea una nueva persona",
+  // Ruta para actualizar una persona
+  fastify.put("/:id", {
+    schema: {
+      summary: "Actualizar una persona",
+      description: "Actualiza los datos de una persona por su ID.",
+      params: PersonaIdSchema,
+      body: PersonaPutSchema,
+      tags: ["persona"],
+      response: {
+        200: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            nombre: { type: "string" },
+            nombre2: { type: "string" },
+            apellido: { type: "string" },
+            email: { type: "string" },
+            cedula: { type: "string" },
+            rut: { type: "string" },
+          }
         },
-        handler: async function (request, reply) {
-            const personaPost = request.body as PersonaPostType;
-
-            // Cifrar la contraseña
-            const hashedPassword = await bcrypt.hash(personaPost.contrasena, 10);
-
-            // Insertar persona en la base de datos, usando sentencias parametrizadas para evitar inyección SQL
-            const res = await query(
-                `INSERT INTO personas (nombre, nombre2, apellido, email, cedula, rut, contrasena)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING id;`,
-                [personaPost.nombre,
-                personaPost.nombre2,
-                personaPost.apellido,
-                personaPost.email,
-                personaPost.cedula,
-                personaPost.rut,
-                    hashedPassword]
-            );
-
-            if (res.rows.length === 0) {
-                reply.code(404).send({ message: "Persona no creada" });
-                return;
-            }
-
-            const id = res.rows[0].id;
-
-            // Generar JWT
-            const token = fastify.jwt.sign({ id, email: personaPost.email });
-
-            // Responder con el token y los datos de la persona
-            reply.code(201).send({ id, token, ...personaPost });
+        404: {
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
+        },
+        403: {
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
         }
-    });
+      }
+    },
+    onRequest: fastify.authenticate,
+    handler: async function (request, reply) {
+      const { id } = request.params as { id: string };
+      const personaPut = request.body as PersonaPutType;
+
+      const userIdFromToken = request.user.id;
+      if (userIdFromToken !== id) {
+        return reply.code(403).send({ message: "No tienes permiso para modificar esta persona" });
+      }
+
+      const updates: string[] = [];
+      const values: (string | number)[] = [];
+
+      let paramIndex = 1;
+
+      if (personaPut.nombre !== undefined) {
+        updates.push(`nombre = $${paramIndex}`);
+        values.push(personaPut.nombre);
+        paramIndex++;
+      }
+      if (personaPut.nombre2 !== undefined) {
+        updates.push(`nombre2 = $${paramIndex}`);
+        values.push(personaPut.nombre2);
+        paramIndex++;
+      }
+      if (personaPut.apellido !== undefined) {
+        updates.push(`apellido = $${paramIndex}`);
+        values.push(personaPut.apellido);
+        paramIndex++;
+      }
+      if (personaPut.email !== undefined) {
+        updates.push(`email = $${paramIndex}`);
+        values.push(personaPut.email);
+        paramIndex++;
+      }
+      if (personaPut.cedula !== undefined) {
+        updates.push(`cedula = $${paramIndex}`);
+        values.push(personaPut.cedula);
+        paramIndex++;
+      }
+      if (personaPut.rut !== undefined) {
+        updates.push(`rut = $${paramIndex}`);
+        values.push(personaPut.rut);
+        paramIndex++;
+      }
+
+      values.push(id);
+
+      const res = await query(
+        `UPDATE personas
+         SET ${updates.join(", ")}
+         WHERE id = $${paramIndex}
+         RETURNING id;`,
+        values
+      );
+
+      if (res.rows.length === 0) {
+        reply.code(404).send({ message: "Persona no encontrada" });
+        return;
+      }
+
+      reply.code(200).send({ ...personaPut, id });
+    }
+  });
 
 
-    // Ruta para eliminar una persona
-    fastify.delete("/:id", {
-        schema: {
-            tags: ["persona"],
-            description: "Elimina una persona por ID",
-            params: PersonaIdSchema,
-            response: {
-                200: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string" },
-                        id: { type: "string" }
-                    }
-                },
-                404: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string" }
-                    }
-                }
-            }
-        },
-
-        onRequest: fastify.authenticate,
-
-        handler: async function (request, reply) {
-            const { id } = request.params as { id: string };
-            const res = await query(`DELETE FROM personas WHERE id = ${id};`);
-            if (res.rowCount === 0) {
-                reply.code(404).send({ message: "Persona no encontrada" });
-                return;
-            }
-            reply.code(200).send({ message: "Persona eliminada", id });
+  // Ruta para obtener los detalles de una persona por ID
+  fastify.get("/:id", {
+    schema: {
+      summary: "Obtener detalles de una persona",
+      description: "Obtiene los detalles de una persona específica por su ID.",
+      params: PersonaIdSchema,
+      tags: ["persona"],
+      response: {
+        200: PersonaSchema,
+        404: {
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
         }
-    });
+      }
+    },
+    onRequest: fastify.authenticate,
+    handler: async function (request, reply) {
+      const { id } = request.params as { id: string };
+      const res = await query(`SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas WHERE id = ${id};`);
+      if (res.rows.length === 0) {
+        reply.code(404).send({ message: "Persona no encontrada" });
+        return;
+      }
+      return res.rows[0];
+    }
+  });
 
-    // Ruta para editar una persona
-    fastify.put("/:id", {
-        schema: {
-            tags: ["persona"],
-            description: "Actualiza una persona por ID",
-            params: PersonaIdSchema,
-            body: PersonaPutSchema,
-            response: {
-                200: {
-                    type: "object",
-                    properties: {
-                        id: { type: "string" },
-                        nombre: { type: "string" },
-                        nombre2: { type: "string" },
-                        apellido: { type: "string" },
-                        email: { type: "string" },
-                        cedula: { type: "string" },
-                        rut: { type: "string" },
-                    }
-                },
-                404: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string" }
-                    }
-                }
-            }
-        },
 
-        onRequest: fastify.authenticate,
-
-        handler: async function (request, reply) {
-            const { id } = request.params as { id: string };
-            const personaPut = request.body as PersonaPutType;
-
-            // Obtener el ID del token JWT
-            const userIdFromToken = request.user.id;  // Suponiendo que el token tiene un campo 'id'
-
-            // Verificar si el usuario autenticado es el mismo que está siendo modificado
-            if (userIdFromToken !== id) {
-                return reply.code(403).send({ message: "No tienes permiso para modificar esta persona" });
-            }
-
-            // Actualizar la persona en la base de datos
-            const res = await query(`UPDATE personas
-                SET nombre = $1,
-                    nombre2 = $2,
-                    apellido = $3,
-                    email = $4,
-                    cedula = $5,
-                    rut = $6
-                WHERE id = $7
-                RETURNING id;`,
-                [personaPut.nombre, personaPut.nombre2, personaPut.apellido, personaPut.email, personaPut.cedula, personaPut.rut, id]
-            );
-
-            if (res.rows.length === 0) {
-                reply.code(404).send({ message: "Persona no encontrada" });
-                return;
-            }
-            reply.code(200).send({ ...personaPut, id });
-        }
-    });
-
-    // Ruta para ver los datos de una persona específica
-    fastify.get("/:id", {
-        schema: {
-            tags: ["persona"],
-            description: "Obtiene los detalles de una persona por ID",
-            params: PersonaIdSchema,
-            response: {
-                200: {
-                    type: "object",
-                    properties: {
-                        id: { type: "string" },
-                        nombre: { type: "string" },
-                        nombre2: { type: "string" },
-                        apellido: { type: "string" },
-                        email: { type: "string" },
-                        cedula: { type: "string" },
-                        rut: { type: "string" },
-                    }
-                },
-                404: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string" }
-                    }
-                }
-            }
-        },
-        onRequest: fastify.authenticate,
-
-        handler: async function (request, reply) {
-            const { id } = request.params as { id: string };
-            const res = await query(`SELECT 
-        id,
-        nombre,
-        nombre2,
-        apellido,
-        email,
-        cedula,
-        rut
-        FROM personas WHERE id = ${id};`);
-
-            if (res.rows.length === 0) {
-                reply.code(404).send({ message: "Persona no encontrada" });
-                return;
-            }
-            const persona = res.rows[0];
-            return persona;
-        }
-    });
-
-    fastify.post("/login", {
-        schema: {
-            body: {
-                type: "object",
-                properties: {
-                    email: { type: "string" },
-                    password: { type: "string" },
-                },
-                required: ["email", "password"],
-            },
-            tags: ["persona"],
-            description: "Login de usuario para obtener token JWT",
-        },
-        handler: async (request, reply) => {
-            // Tipar el cuerpo de la solicitud correctamente
-            const { email, password } = request.body as { email: string, password: string };
-
-            try {
-                // Verificar si el usuario existe
-                const res = await query("SELECT id, contrasena FROM personas WHERE email = $1", [email]);
-                if (res.rows.length === 0) {
-                    return reply.code(401).send({ message: "Usuario no encontrado" });
-                }
-
-                const { id, contrasena: hashedPassword, nombre, apellido } = res.rows[0];
-
-                // Verificar la contraseña
-                const isPasswordValid = await bcrypt.compare(password, hashedPassword);
-                if (!isPasswordValid) {
-                    return reply.code(401).send({ message: "Contraseña incorrecta" });
-                }
-
-                // Generar token JWT
-                const token = fastify.jwt.sign({ id, email });
-
-                // Responder con el token
-                reply.code(200).send({ token, id, user: { nombre, apellido, email } }); // Aquí incluyes lo que necesitas
-            } catch (error) {
-                console.error("Error en el login:", error);
-                reply.code(500).send({ message: "Error en el servidor" });
-            }
-        },
-    });
 };
 
 export default personaRoute;

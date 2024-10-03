@@ -1,46 +1,83 @@
-import { validacionesFormulario } from "../../importante/validaciones.js"; // Asegúrate de que la ruta sea correcta
-import { createPersona } from "../../importante/metodos.js"; // Importa la función para crear una persona
+import { validacionesFormulario } from "../../importante/validaciones.js";
+import { createPersona } from "../../importante/metodos.js";
+function getUserDataFromURL() {
 
-document.getElementById('validateBtn').addEventListener('click', async () => {
-    if (validacionesFormulario()) {
-        const nombre = document.getElementById('nombre');
-        const nombre2 = document.getElementById('nombre2');
-        const apellido = document.getElementById('apellido');
-        const password = document.getElementById('password');
-        const email = document.getElementById('email');
-        const cedula = document.getElementById('cedula');
-        const rut = document.getElementById('rut');
+    const urlParams = new URLSearchParams(window.location.search);
 
-        // Crear el objeto nuevaPersona, incluyendo nombre2 solo si tiene un valor
-        const nuevaPersona = {
-            nombre: nombre.value,
-            apellido: apellido.value,
-            contrasena: password.value,
-            email: email.value,
-            cedula: cedula.value,
-            rut: rut.value,
-        };
 
-        // Si nombre2 tiene un valor, lo agregamos al objeto
-        if (nombre2.value.trim() !== '') {
-            nuevaPersona.nombre2 = nombre2.value;
-        }
+    const email = urlParams.get('email');
+    const nombre = urlParams.get('given_name');
+    const apellido = urlParams.get('family_name');
+    if (!email || !nombre || !apellido) {
+        console.error('No se han encontrado los datos esperados en la URL');
+        return null;
+    }
 
+
+    return { email, nombre: nombre, apellido };
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+
+
+    const userData = getUserDataFromURL();
+
+    if (!userData) {
+        console.error('No valid user data found');
+        return;
+    }
+
+    nombre.value = userData.nombre || '';
+    email.value = userData.email || '';
+
+    if (!apellido.value === "undefined") {
+        apellido.value = userData.apellido || '';
+    } else {
+        console.log("Tu cuenta no tiene un apellido registrado")
+    }
+
+});
+
+document.getElementById('validateBtn').addEventListener('click', async function () {
+
+    const nombre = document.getElementById('nombre').value + " " + document.getElementById('nombre2').value;
+
+    const apellido = document.getElementById('apellido');
+    const contrasena = document.getElementById('contrasena');
+    const email = document.getElementById('email');
+    const cedula = document.getElementById('cedula');
+    const rut = document.getElementById('rut');
+    const imagen = document.getElementById('imagen');
+
+    const errorElements = document.querySelectorAll('.error');
+    errorElements.forEach(el => el.style.display = 'none');
+
+    let isValid = validacionesFormulario();
+
+    if (isValid) {
         try {
-            // Usamos la función `createPersona` para realizar la solicitud POST
-            const responseAlta = await createPersona(nuevaPersona);
+            const formData = new FormData();
+            formData.append('nombre', nombre);
+            formData.append('apellido', apellido.value);
+            formData.append('email', email.value);
+            formData.append('contrasena', contrasena.value);
+            formData.append('cedula', cedula.value);
+            formData.append('rut', rut.value);
 
-            if (responseAlta) {
-                alert('Todos los campos son válidos.');
-                console.log(nuevaPersona);
-                window.location.href = '../../listado/verTodos/index.html';
-
-            } else {
-                alert('Error al registrar la persona');
+            if (imagen.files.length > 0) {
+                formData.append('imagen', imagen.files[0]);
             }
+
+            if (nombre2.value.trim() !== '') {
+                formData.append('nombre2', nombre2.value);
+            }
+
+            const responseAlta = await createPersona(formData);
+            console.log(responseAlta);
         } catch (error) {
             console.error('Error al registrar la persona:', error);
             alert('Error al registrar la persona');
         }
     }
 });
+

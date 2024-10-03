@@ -1,15 +1,20 @@
 {
+  "extends": "fastify-tsconfig",
   "compilerOptions": {
     "outDir": "dist",
     "sourceMap": true,
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "target": "ES2022",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./path/to/declarations"
+    ]
   },
   "include": [
     "src/**/*.ts",
-    "src/plugins/swagger.ts",
-    "src/tipos/*.ts",
+    "src/tipos/fastify.ts",
+    "src/plugins/multipart.ts"
   ]
 }

@@ -1,8 +1,1 @@
-en el archivo .env debe haber 
-PGDATABASE=personas
-PGUSER=admin
-PGPASSWORD=admin
-PGPORT=5431
-PGHOST=database
-
-falta la implementacion de la imagen y de google oauth2
+Hola, tiene que crear una carpeta en backend a la altura de src que se llame uploads
