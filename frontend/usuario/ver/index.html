@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información de la Persona</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+  <body>
+    <div class="container">
+      <!-- Sección de Información del Usuario -->
+      <div class="user-info">
+        <h2>Información del Usuario</h2>
+        <img id="userPicture" alt="Foto del Usuario" />
+        <p><strong>Nombre:</strong> <span id="userName"></span></p>
+        <p><strong>Apellido:</strong> <span id="userLastName"></span></p>
+        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+        <p><strong>Idioma:</strong> <span id="userLocale"></span></p>
+      </div>
 
-<body>
-    <div class="rounded-square">
-        <div id="fotoPerfil"></div>
+      <!-- Sección de Calendarios -->
+      <div class="calendarios">
+        <h2>Calendarios</h2>
+        <div id="calendarioContainer"></div>
+      </div>
 
-        <div class="name-lastname">
-            <h4 id="nombre"></h4>
-            <h4 id="nombre2"></h4>
-            <h4 id="apellido"></h4>
-        </div>
-        <p id="email"></p>
-        <p id="cedula"></p>
-        <p id="rut"></p>
+      <!-- Sección de Contactos -->
+      <div class="contactos">
+        <h2>Contactos</h2>
+        <div id="contactosContainer"></div>
+      </div>
+
+      <!-- Sección de Archivos de Google Drive -->
+      <div class="archivos">
+        <h2>Archivos de Google Drive</h2>
+        <div id="driveContainer"></div>
+      </div>
     </div>
-    <a class="botonlindo" href="./../../listado/verTodos/index.html">Volver</a>
-    <script type="module" src="./complemento.js"></script>
-</body>
-
+  </body>
 </html>

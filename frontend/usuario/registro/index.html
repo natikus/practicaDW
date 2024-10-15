@@ -1,64 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
-</head>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
 
-<body>
+  <body>
     <form enctype="multipart/form-data" id="myForm">
-        <h3>Registrarse :3</h3>
+      <h3>Registrarse :3</h3>
 
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
-        <span class="error" id="nombreError"></span><br>
+      <label for="contrasena">Contraseña:</label>
+      <input
+        type="password"
+        id="contrasena"
+        name="contrasena"
+        placeholder="Ingresa una contraseña"
+      />
+      <span class="error" id="contrasenaError"></span><br />
 
-        <label for="nombre2">Segundo Nombre:</label>
-        <input type="text" id="nombre2" name="nombre2" placeholder="Ingresa tu segundo nombre">
-        <span class="error" id="nombre2Error"></span><br>
+      <label for="confirmContrasena">Confirmación de Contraseña:</label>
+      <input
+        type="password"
+        id="confirmContrasena"
+        name="confirmContrasena"
+        placeholder="Ingresa la misma contraseña"
+      />
+      <span class="error" id="confirmPasswordError"></span><br />
 
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" name="apellido" placeholder="Ingresa tus apellidos">
-        <span class="error" id="apellidoError"></span><br>
+      <label for="email">Correo Electrónico:</label>
+      <input
+        type="text"
+        id="email"
+        name="email"
+        placeholder="Ingresa un correo que uses"
+      />
+      <span class="error" id="emailError"></span><br />
 
-        <label for="contrasena">Contraseña:</label>
-        <input type="password" id="contrasena" name="contrasena" placeholder="Ingresa una contraseña">
-        <span class="error" id="contrasenaError"></span><br>
+      <button type="button" id="validateBtn">Ingresar</button>
 
-        <label for="confirmContrasena">Confirmación de Contraseña:</label>
-        <input type="password" id="confirmContrasena" name="confirmContrasena"
-            placeholder="Ingresa la misma contraseña">
-        <span class="error" id="confirmPasswordError"></span><br>
-
-        <label for="email">Correo Electrónico:</label>
-        <input type="text" id="email" name="email" placeholder="Ingresa un correo que uses">
-        <span class="error" id="emailError"></span><br>
-
-        <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" name="cedula" placeholder="Con el formato x.xxx.xxx-x">
-        <span class="error" id="cedulaError"></span><br>
-
-        <label for="rut">RUT:</label>
-        <input type="text" id="rut" name="rut" placeholder="Ingresa el RUT de tu empresa">
-        <span class="error" id="rutError"></span><br>
-
-
-        <label for="imagen">Imagen:</label>
-        <input type="file" id="imagen" name="imagen" accept="image/*">
-        <span class="error" id="imagenError"></span><br>
-        <img id="output" width="200">
-        <button type="button" id="validateBtn">Ingresar</button>
-
-
-
-        <img id="output" width="200">
+      <img id="output" width="200" />
     </form>
+
+    <div id="calendarioContainer"></div>
+    <div id="contactosContainer"></div>
+    <div id="driveContainer"></div>
+
     <script type="module" src="./complemento.js"></script>
-
-</body>
-
+  </body>
 </html>

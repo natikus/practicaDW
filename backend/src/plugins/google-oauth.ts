@@ -1,29 +1,35 @@
-import oauthPlugin, { FastifyOAuth2Options } from '@fastify/oauth2';
-import fp from 'fastify-plugin';
-import 'dotenv/config';
+import oauthPlugin, { FastifyOAuth2Options } from "@fastify/oauth2";
+import fp from "fastify-plugin";
+import "dotenv/config";
 
 export default fp(async (fastify) => {
-    console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);
+  console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);
 
-    const googleOAuth20ptions: FastifyOAuth2Options = {
-        name: 'googleOAuth2',
-        scope: ['profile', 'email'],
-        credentials: {
-            client: {
-                id: process.env.GOOGLE_CLIENT_ID || '',
-                secret: process.env.GOOGLE_CLIENT_SECRET || '',
-            },
-        },
-        startRedirectPath: '/auth/login/google',
-        callbackUri: `https://localhost/backend/auth/login/google/callback`,
-        callbackUriParams: {
-            access_type: 'offline',
-        },
-        pkce: 'S256',
-        discovery: {
-            issuer: 'https://accounts.google.com'
-        },
-    };
+  const googleOAuth20ptions: FastifyOAuth2Options = {
+    name: "googleOAuth2",
+    scope: [
+      "profile",
+      "email",
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/drive",
+    ],
+    credentials: {
+      client: {
+        id: process.env.GOOGLE_CLIENT_ID || "",
+        secret: process.env.GOOGLE_CLIENT_SECRET || "",
+      },
+    },
+    startRedirectPath: "/auth/login/google",
+    callbackUri: `https://localhost/backend/auth/login/google/callback`,
+    callbackUriParams: {
+      access_type: "offline", // Para obtener el token de actualización
+    },
+    pkce: "S256", // Para mejorar la seguridad de la autenticación
+    discovery: {
+      issuer: "https://accounts.google.com",
+    },
+  };
 
-    fastify.register(oauthPlugin.fastifyOauth2, googleOAuth20ptions);
+  fastify.register(oauthPlugin.fastifyOauth2, googleOAuth20ptions);
 });
