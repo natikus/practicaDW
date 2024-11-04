@@ -1,4 +1,3 @@
-import { google } from "googleapis";
 import type {
   FastifyInstance,
   FastifyPluginAsync,
@@ -22,11 +21,24 @@ const googleRoutes: FastifyPluginAsync = async (
           "Ruta para manejar el callback de autenticación de Google OAuth2.",
         params: { type: "object", properties: {} },
         response: {
-          302: {
+          200: {
             description:
-              "Redirección exitosa con el token JWT o registro de usuario.",
+              "Respuesta con el token JWT o información para registro.",
             type: "object",
-            properties: { token: { type: "string" }, user: { type: "object" } },
+            properties: {
+              token: { type: "string" },
+              registrationRequired: { type: "boolean" },
+              userInfo: {
+                type: "object",
+                properties: {
+                  email: { type: "string" },
+                  given_name: { type: "string" },
+                  family_name: { type: "string" },
+                  picture: { type: "string" },
+                  locale: { type: "string" },
+                },
+              },
+            },
           },
           500: {
             description: "Error durante el proceso de autenticación.",
@@ -38,74 +50,46 @@ const googleRoutes: FastifyPluginAsync = async (
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
+        // Obtiene el token de Google OAuth2
         const googletoken =
           await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(
             request
           );
-        const accessToken = googletoken.token.access_token;
 
-        // Obtiene la información del usuario directamente
-        const userinfo = await fastify.googleOAuth2.userinfo(accessToken);
-        const { email, given_name, family_name, picture, locale } = userinfo;
+        console.log({ googletoken });
 
-        // API de Google Calendar
-        const calendar = google.calendar({ version: "v3", auth: accessToken });
-        // API de Google Contacts
-        const people = google.people({ version: "v1", auth: accessToken });
-        // API de Google Drive
-        const drive = google.drive({ version: "v3", auth: accessToken });
-
-        try {
-          const calendarList = await calendar.calendarList.list();
-          console.log(
-            "Calendarios:",
-            calendarList.data.items || "No hay calendarios disponibles"
-          );
-        } catch (error) {
-          console.error("Error al obtener la lista de calendarios:", error);
-        }
-
-        try {
-          const contacts = await people.people.connections.list({
-            resourceName: "people/me",
-            personFields: "names,emailAddresses",
-          });
-          console.log(
-            "Contactos:",
-            contacts.data.connections || "No hay contactos disponibles"
-          );
-        } catch (error) {
-          console.error("Error al obtener contactos:", error);
-        }
-
-        try {
-          const driveFiles = await drive.files.list();
-          console.log(
-            "Archivos en Drive:",
-            driveFiles.data.files || "No hay archivos disponibles"
-          );
-        } catch (error) {
-          console.error("Error al obtener archivos de Drive:", error);
-        }
-
-        const res = await query(
-          `SELECT id, email FROM personas WHERE email = $1`,
-          [email]
+        const userinfo = await fastify.googleOAuth2.userinfo(
+          googletoken.token.access_token
         );
 
-        if (res.rows.length > 0) {
-          const user = res.rows[0];
-          const token = fastify.jwt.sign({ id: user.id, email });
+        // Convertir la respuesta en un string y luego en un objeto para manejar los datos
+        const parsedUserinfo = JSON.parse(JSON.stringify(userinfo));
+
+        const email = parsedUserinfo.email;
+        const given_name = parsedUserinfo.given_name;
+        const family_name = parsedUserinfo.family_name;
+        console.log("Se obtuvieron los datos", email, given_name, family_name);
+
+        // Verifica si el correo electrónico existe en la base de datos
+        const res = await query(
+          `SELECT id, email FROM personas WHERE email = '${email}'`
+        );
+
+        // En caso de que la persona no exista en la base de datos, se pasan los datos en la URL
+        if (res.rows.length === 0) {
           reply.redirect(
-            `https://localhost/usuario/ver/index.html?token=${token}&user=${user.id}`
+            `https://localhost/usuario/registro/index.html?email=${email}&given_name=${given_name}&family_name=${family_name}`
           );
-        } else {
-          reply.redirect(
-            `https://localhost/usuario/registro/index.html?email=${email}&given_name=${given_name}&family_name=${family_name}&picture=${picture}&locale=${locale}`
-          );
+          return;
         }
+
+        const user = res.rows[0];
+        const token = fastify.jwt.sign({ id: user.id, email });
+        reply.redirect(
+          `https://localhost/usuario/ver/index.html?token=${token}&user=${user.id}`
+        );
       } catch (error) {
-        console.error("Error al procesar la autenticación:", error);
+        console.error("Error al obtener el token de acceso:", error);
         reply.status(500).send({ error: "Error al procesar la autenticación" });
       }
     }
