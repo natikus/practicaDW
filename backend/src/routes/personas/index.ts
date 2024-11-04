@@ -1,43 +1,55 @@
-import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from 'fastify';
-import bcrypt from 'bcrypt';
+import type {
+  FastifyInstance,
+  FastifyPluginAsync,
+  FastifyPluginOptions,
+} from "fastify";
+import bcrypt from "bcrypt";
 import { query } from "./../../services/database.js";
-import { PersonaIdSchema, PersonaPostSchema, PersonaPutSchema, PersonaSchema, PersonaPutType, PersonaPostType } from '../../tipos/persona.js';
-import path from 'path';
-import { writeFileSync } from 'fs';
+import {
+  PersonaIdSchema,
+  PersonaPostSchema,
+  PersonaPutSchema,
+  PersonaSchema,
+  PersonaPutType,
+  PersonaPostType,
+} from "../../../uploads/tipos/persona.js";
+import path from "path";
+import { writeFileSync } from "fs";
 
 const personaRoute: FastifyPluginAsync = async (
   fastify: FastifyInstance,
   opts: FastifyPluginOptions
 ): Promise<void> => {
-
   // Ruta para obtener todas las personas
   fastify.get("/", {
     schema: {
       summary: "Obtener todas las personas",
-      description: "Devuelve la lista completa de personas registradas en la base de datos.",
+      description:
+        "Devuelve la lista completa de personas registradas en la base de datos.",
       tags: ["persona"],
       response: {
         200: {
           type: "array",
-
         },
         404: {
           type: "object",
           properties: {
-            message: { type: "string" }
-          }
-        }
-      }
+            message: { type: "string" },
+          },
+        },
+      },
     },
     onRequest: fastify.authenticate,
     handler: async function (request, reply) {
-      const res = await query(`SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas`);
+      const res = await query(
+        `SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas`
+      );
       if (res.rows.length === 0) {
         reply.code(404).send({ message: "No hay personas registradas" });
         return;
       }
       return res.rows;
-    }
+    },
   });
 
   // Ruta para crear una nueva persona
@@ -51,10 +63,14 @@ const personaRoute: FastifyPluginAsync = async (
     handler: async function (request, reply) {
       const personaPost = request.body as PersonaPostType;
 
-      let imageUrl = '';
+      let imageUrl = "";
       if (personaPost.imagen) {
         const fileBuffer = personaPost.imagen._buf as Buffer;
-        const filepath = path.join(process.cwd(), "uploads", personaPost.imagen.filename);
+        const filepath = path.join(
+          process.cwd(),
+          "uploads",
+          personaPost.imagen.filename
+        );
         writeFileSync(filepath, fileBuffer);
         imageUrl = `/uploads/${personaPost.imagen.filename}`;
       }
@@ -63,7 +79,10 @@ const personaRoute: FastifyPluginAsync = async (
       const email = personaPost.email.value;
       const cedula = personaPost.cedula.value;
       const rut = personaPost.rut.value;
-      const hashedPassword = await bcrypt.hash(personaPost.contrasena.value, 10);
+      const hashedPassword = await bcrypt.hash(
+        personaPost.contrasena.value,
+        10
+      );
 
       const res = await query(
         `INSERT INTO personas
@@ -86,12 +105,10 @@ const personaRoute: FastifyPluginAsync = async (
         email,
         cedula,
         rut,
-        imageUrl
+        imageUrl,
       });
-    }
+    },
   });
-
-
 
   // Ruta para eliminar una persona
   fastify.delete("/:id", {
@@ -105,16 +122,16 @@ const personaRoute: FastifyPluginAsync = async (
           type: "object",
           properties: {
             message: { type: "string" },
-            id: { type: "number" }
-          }
+            id: { type: "number" },
+          },
         },
         404: {
           type: "object",
           properties: {
-            message: { type: "string" }
-          }
-        }
-      }
+            message: { type: "string" },
+          },
+        },
+      },
     },
     onRequest: fastify.verifySelf,
     handler: async function (request, reply) {
@@ -125,9 +142,8 @@ const personaRoute: FastifyPluginAsync = async (
         return;
       }
       reply.code(200).send({ message: "Persona eliminada", id });
-    }
+    },
   });
-
 
   // Ruta para actualizar una persona
   fastify.put("/:id", {
@@ -148,21 +164,21 @@ const personaRoute: FastifyPluginAsync = async (
             email: { type: "string" },
             cedula: { type: "string" },
             rut: { type: "string" },
-          }
+          },
         },
         404: {
           type: "object",
           properties: {
-            message: { type: "string" }
-          }
+            message: { type: "string" },
+          },
         },
         403: {
           type: "object",
           properties: {
-            message: { type: "string" }
-          }
-        }
-      }
+            message: { type: "string" },
+          },
+        },
+      },
     },
     onRequest: fastify.verifySelf,
     handler: async function (request, reply) {
@@ -171,7 +187,9 @@ const personaRoute: FastifyPluginAsync = async (
 
       const userIdFromToken = request.user.id;
       if (userIdFromToken !== id) {
-        return reply.code(403).send({ message: "No tienes permiso para modificar esta persona" });
+        return reply
+          .code(403)
+          .send({ message: "No tienes permiso para modificar esta persona" });
       }
 
       const updates: string[] = [];
@@ -226,9 +244,8 @@ const personaRoute: FastifyPluginAsync = async (
       }
 
       reply.code(200).send({ ...personaPut, id });
-    }
+    },
   });
-
 
   // Ruta para obtener los detalles de una persona por ID
   fastify.get("/:id", {
@@ -242,24 +259,24 @@ const personaRoute: FastifyPluginAsync = async (
         404: {
           type: "object",
           properties: {
-            message: { type: "string" }
-          }
-        }
-      }
+            message: { type: "string" },
+          },
+        },
+      },
     },
     onRequest: fastify.authenticate,
     handler: async function (request, reply) {
       const { id } = request.params as { id: string };
-      const res = await query(`SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas WHERE id = ${id};`);
+      const res = await query(
+        `SELECT id, nombre, nombre2, apellido, email, cedula, rut, imagen FROM personas WHERE id = ${id};`
+      );
       if (res.rows.length === 0) {
         reply.code(404).send({ message: "Persona no encontrada" });
         return;
       }
       return res.rows[0];
-    }
+    },
   });
-
-
 };
 
 export default personaRoute;

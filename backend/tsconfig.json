@@ -7,14 +7,11 @@
     "module": "NodeNext",
     "target": "ES2022",
     "esModuleInterop": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./path/to/declarations"
-    ]
+    "typeRoots": ["./node_modules/@types", "./path/to/declarations"]
   },
   "include": [
     "src/**/*.ts",
-    "src/tipos/fastify.ts",
+    "uploads/tipos/fastify.ts",
     "src/plugins/multipart.ts"
   ]
 }
