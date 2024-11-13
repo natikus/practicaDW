@@ -1,22 +1,6 @@
 // Definir la URL base de tu API
 const API_URL = "https://localhost/backend/personas";
 
-// Función para crear una nueva persona (POST /persona)
-export async function createPersona(formData) {
-  try {
-    const response = await fetch(`${API_URL}`, {
-      method: "POST",
-      body: formData,
-    });
-    if (!response.ok) throw new Error("Error al crear la persona");
-    window.location.href = "../../usuario/login/index.html";
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 export async function loginGoogle(user, token) {
   try {
     if (user && token) {

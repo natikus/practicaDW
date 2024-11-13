@@ -3,22 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Página Principal</title>
+    <title>Google OAuth2 App</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js" async defer></script>
   </head>
-
   <body>
     <div class="container">
-      <h1>Bienvenido</h1>
-      <div class="button-container">
-        <a
-          href="https://localhost/backend/auth/login/google"
-          id="btnGoogle"
-          class="go"
-        >
-          Vamos a jugar</a
-        >
+      <h1>Google OAuth2 App</h1>
+      <div id="login-btn">
+        <!-- Este div contendrá el botón de Google -->
+        <!-- El botón de GIS se renderizará aquí automáticamente -->
+      </div>
+
+      <div id="user-info" style="display: none">
+        <h2>Datos Básicos del Usuario</h2>
+        <p><strong>Nombre:</strong> <span id="user-name"></span></p>
+        <p><strong>Correo:</strong> <span id="user-email"></span></p>
+
+        <h2>Google Drive</h2>
+        <ul id="drive-files"></ul>
+
+        <h2>Google Calendar</h2>
+        <ul id="calendar-events"></ul>
       </div>
     </div>
+
+    <script src="complemento.js"></script>
   </body>
 </html>

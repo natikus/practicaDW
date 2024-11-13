@@ -1,48 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google OAuth2 App</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://apis.google.com/js/api.js"></script>
   </head>
-
   <body>
     <div class="container">
-      <!-- Sección de Información del Usuario -->
-      <div class="user-info">
-        <h2>Información del Usuario</h2>
-        <img id="userPicture" alt="Foto del Usuario" />
-        <p><strong>Nombre:</strong> <span id="userName"></span></p>
-        <p><strong>Apellido:</strong> <span id="userLastName"></span></p>
-        <p><strong>Email:</strong> <span id="userEmail"></span></p>
-        <p><strong>Idioma:</strong> <span id="userLocale"></span></p>
-      </div>
+      <h1>Google OAuth2 App</h1>
+      <button id="login-btn">Iniciar sesión con Google</button>
 
-      <!-- Sección de Calendarios -->
-      <div class="calendarios">
-        <h2>Calendarios</h2>
-        <div id="calendarioContainer"></div>
-      </div>
+      <div id="user-info" style="display: none">
+        <h2>Datos Básicos del Usuario</h2>
+        <p><strong>Nombre:</strong> <span id="user-name"></span></p>
+        <p><strong>Correo:</strong> <span id="user-email"></span></p>
 
-      <!-- Sección de Contactos -->
-      <div class="contactos">
-        <h2>Contactos</h2>
-        <div id="contactosContainer"></div>
-      </div>
+        <h2>Google Drive</h2>
+        <ul id="drive-files"></ul>
 
-      <!-- Sección de Archivos de Google Drive -->
-      <div class="archivos">
-        <h2>Archivos de Google Drive</h2>
-        <div id="driveContainer"></div>
+        <h2>Google Calendar</h2>
+        <ul id="calendar-events"></ul>
       </div>
     </div>
+
+    <script src="complemento.js"></script>
   </body>
 </html>
